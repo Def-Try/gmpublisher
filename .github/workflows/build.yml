@@ -25,7 +25,13 @@ jobs:
       run: echo "Hello, world!"
 
     - name: Building and installing OpenSSL
-      run: git clone git://git.openssl.org/openssl.git && cd openssl && ./config --openssldir=/usr/local/ssl && make & make test & sudo make install
+      run: | 
+        git clone git://git.openssl.org/openssl.git \
+          cd openssl \
+          ./config --openssldir=/usr/local/ssl \
+          make \
+          make test \
+          sudo make install
 
     - name: Setting environment variables
       run: export OPENSSL_DIR="/usr/local/ssl"
