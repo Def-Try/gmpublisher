@@ -13,7 +13,7 @@ jobs:
     - uses: actions/setup-node@v2
     
     - name: Install libGTK-3, pkg-config and OpenSSH headers
-      run: sudo apt-get install libgtk-3-dev pkg-config libssl-dev
+      run: sudo apt-get install libgtk-3-dev gtksourceview3 pkg-config libssl-dev
       
     - name: Setup Node & Yarn
       run: yarn install
