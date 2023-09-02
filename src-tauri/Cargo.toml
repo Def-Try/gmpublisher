@@ -40,8 +40,7 @@ git = "https://github.com/WilliamVenner/steamworks-rs"
 branch = "personal-2"
 
 [dependencies]
-openssl-sys = "0.9"
-openssl = "0.10"
+openssl = { version = "0.10", features = ["vendored"] }
 tauri-utils = "1.0.0-beta-rc.1"
 turbonone = "0.2.1"
 serde_json = "1.0.64"
