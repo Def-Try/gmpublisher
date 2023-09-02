@@ -21,8 +21,11 @@ jobs:
     - name: Install Tauri Bundler
       run: yarn add -D @tauri-apps/cli
 
-    - name: Setup environment variables
-      run: export OPENSSL_DIR=$(openssl version -d | cut -c 14- | rev | cut -c 2- | rev)
+    - name: Setup environment variables #1
+      run: #export OPENSSL_DIR=$(openssl version -d | cut -c 14- | rev | cut -c 2- | rev)
+
+    - name: Setup environment variabled #2
+      run: export OPENSSL_NO_VENDOR=1
     
     - name: Build
       run: yarn tauri build
