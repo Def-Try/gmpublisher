@@ -8,7 +8,6 @@
     "devPath": "http://localhost:5000",
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
-    
     "withGlobalTauri": true
   },
   "tauri": {
@@ -30,7 +29,6 @@
       "longDescription": "Garry's Mod Workshop Publishing Utility",
       "deb": {
         "depends": [],
-        "useBootstrapper": false
       },
       "macOS": {
         "frameworks": ["lib/steam_api/osx/libsteam_api.dylib"],
