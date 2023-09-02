@@ -18,16 +18,31 @@ jobs:
     - name: Setup Node & Yarn
       run: yarn install
     
-    - name: Install Tauri Bundler
+    - name: Install Tauri CLI
       run: yarn add -D @tauri-apps/cli
 
-    #- name: Setup environment variables
-    #  run: export OPENSSL_DIR=$(openssl version -d | cut -c 14- | rev | cut -c 2- | rev)
+    - name: Template command
+      run: echo "Hello, world!"
 
-    - name: Setup environment variables
-      run: export OPENSSL_NO_VENDOR=1
+    - name: Initiating manual OpenSSL build
+      run: git clone git://git.openssl.org/openssl.git && cd openssl
+
+    - name: Configuring OpenSSL
+      run: ./config --openssldir=/usr/local/ssl
+
+    - name: Making OpenSSL...
+      run: make
+
+    - name: Testing OpenSSL...
+      run: make test
+
+    - name: Installing OpenSSL...
+      run: sudo make install
+
+    - name: Setting environment variables
+      run: export OPENSSL_DIR="/usr/local/ssl"
     
-    - name: Build
+    - name: Build GMPublisher
       run: yarn tauri build
 
     - name: Bundle up
