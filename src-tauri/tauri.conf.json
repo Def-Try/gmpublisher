@@ -8,7 +8,7 @@
     "devPath": "http://localhost:5000",
     "beforeDevCommand": "yarn dev",
     "beforeBuildCommand": "yarn build",
-    "afterBuildCommand": "cargo run --manifest-path src-tauri/Cargo.toml -- bundle",
+    
     "withGlobalTauri": true
   },
   "tauri": {
