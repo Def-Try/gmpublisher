@@ -24,20 +24,8 @@ jobs:
     - name: Template command
       run: echo "Hello, world!"
 
-    - name: Initiating manual OpenSSL build
-      run: git clone git://git.openssl.org/openssl.git && cd openssl
-
-    - name: Configuring OpenSSL
-      run: ./config --openssldir=/usr/local/ssl
-
-    - name: Making OpenSSL...
-      run: make
-
-    - name: Testing OpenSSL...
-      run: make test
-
-    - name: Installing OpenSSL...
-      run: sudo make install
+    - name: Building and installing OpenSSL
+      run: git clone git://git.openssl.org/openssl.git && cd openssl && ./config --openssldir=/usr/local/ssl && make & make test & sudo make install
 
     - name: Setting environment variables
       run: export OPENSSL_DIR="/usr/local/ssl"
