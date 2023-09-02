@@ -19,7 +19,7 @@ jobs:
       run: yarn install
     
     - name: Install Tauri Bundler
-      run: cargo install tauri-cli --force
+      run: yarn add -D @tauri-apps/cli
     
     - name: Build
       run: yarn tauri build --release
@@ -34,7 +34,7 @@ jobs:
       run: yarn install
     
     - name: Install Tauri Bundler
-      run: cargo install tauri-cli --force
+      run: yarn add -D @tauri-apps/cli
         
     - name: Build
       run: yarn tauri build --release
@@ -49,7 +49,7 @@ jobs:
       run: yarn install
     
     - name: Install Tauri Bundler
-      run: cargo install tauri-cli --force
+      run: yarn add -D @tauri-apps/cli
         
     - name: Build
       run: yarn tauri build --release
