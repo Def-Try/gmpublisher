@@ -13,7 +13,7 @@ jobs:
     - uses: actions/setup-node@v2
     
     - name: Install libGTK-3, pkg-config and OpenSSH headers
-      run: sudo apt-get install libgtk-3-dev pkg-config libssl-dev
+      run: sudo apt-get install libgtk-3-dev pkg-config libssl-dev openssl1.0 libssl1.0.0 libssl1.0-dev
       
     - name: Setup Node & Yarn
       run: yarn install
@@ -24,17 +24,20 @@ jobs:
     - name: Template command
       run: echo "Hello, world!"
 
-    - name: Building and installing OpenSSL
-      run: | 
-        git clone git://git.openssl.org/openssl.git
-        cd openssl
-        ./config --openssldir=/usr/local/ssl
-        make
-        make test
-        sudo make install
+    #- name: Building and installing OpenSSL
+    #  run: | 
+    #    git clone git://git.openssl.org/openssl.git
+    #    cd openssl
+    #    ./config --openssldir=/usr/local/ssl
+    #    make
+    #    make test
+    #    sudo make install
 
     - name: Setting environment variables
-      run: export OPENSSL_DIR="/usr/local/ssl"
+      run: |
+        export OPENSSL_DIR="/usr/local/ssl"
+        export OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu" 
+        export OPENSSL_INCLUDE_DIR="/usr/include/openssl" 
     
     - name: Build GMPublisher
       run: yarn tauri build
