@@ -33,7 +33,7 @@ jobs:
     - name: Build GMPublisher
       run: |
         cd src-tauri
-        STEAM_SDK_LOCATION=$(echo $(pwd)/../steamworks) cargo build --release
+        STEAM_SDK_LOCATION=$(echo $(pwd)/../steamworks/sdk) cargo build --release
         cd ..
 
     - name: Setup README-Install.txt
