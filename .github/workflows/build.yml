@@ -18,23 +18,8 @@ jobs:
     - name: Setup Node & Yarn
       run: yarn install
     
-    - name: Install Tauri CLI
-      run: yarn add -D @tauri-apps/cli
-
-    #- name: Building and installing OpenSSL
-    #  run: | 
-    #    git clone git://git.openssl.org/openssl.git
-    #    cd openssl
-    #    ./config --openssldir=/usr/local/ssl
-    #    make
-    #    make test
-    #    sudo make install
-
-    #- name: Setting environment variables
-    #  run: |
-    #    export OPENSSL_DIR="/usr/local/ssl"
-    #    export OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu" 
-    #    export OPENSSL_INCLUDE_DIR="/usr/include/openssl" 
+    #- name: Install Tauri CLI
+    #  run: yarn add -D @tauri-apps/cli
 
     - name: Download and extract steamworks v1.51 (151)
       run: |
@@ -42,11 +27,36 @@ jobs:
         mkdir ./steamworks
         unzip steamworks_sdk_151.zip -d ./steamworks
 
-    - name: Setup tmate session
-      uses: mxschmitt/action-tmate@v3
+    #- name: Setup tmate session
+    #  uses: mxschmitt/action-tmate@v3
     
     - name: Build GMPublisher
-      run: STEAM_SDK_LOCATION=$(echo $(pwd)/steamworks) yarn tauri build
+      run: |
+        cd src-tauri
+        STEAM_SDK_LOCATION=$(echo $(pwd)/../steamworks) cargo build --release
+        cd ..
 
-    - name: Bundle up
-      run: cargo run --manifest-path src-tauri/Cargo.toml -- bundle
+    - name: Setup README-Install.txt
+      run: |
+        echo Put gmpublisher file from artifact into /usr/bin >> README-Install.txt
+        echo Put libsteam_api.so file from artifact to /usr/lib >> README-Install.txt
+        echo If you want, put gmpublisher.desktop file to ~/.local/share/applications/gmpublisher.desktop >> README-Install.txt
+
+    - name: Make gmpublisher.desktop file
+      run: |
+        echo "[Desktop Entry]"  >> gmpublisher.desktop
+        echo "Type=Application" >> gmpublisher.desktop
+        echo "Name=gmpublisher" >> gmpublisher.desktop
+        echo "Exec=/usr/bin/gmpublisher" >> gmpublisher.desktop
+        echo "TryExec=gmpublisher" >> gmpublisher.desktop
+        echo "Comment=A powerful and feature-packed Workshop publisher for Garry's Mod!" >> gmpublisher.desktop
+
+    - name: Upload artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: gmpublisher
+        path: |
+          src-tauri/target/release/gmpublisher
+          src-tauri/target/release/libsteam_api.so
+          gmpublisher.desktop
+          README-Install.txt
