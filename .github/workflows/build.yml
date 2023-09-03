@@ -26,6 +26,9 @@ jobs:
 
     - name: Download and extract steamworks v1.51 (151)
       run: |
+        # dry run
+        curl https://partner.steamgames.com/downloads/steamworks_sdk_151.zip > /dev/null
+        # install and download
         wget https://partner.steamgames.com/downloads/steamworks_sdk_151.zip
         mkdir steamworks
         unzip steamworks_sdk_151.zip -d steamworks
@@ -55,12 +58,17 @@ jobs:
         echo "TryExec=gmpublisher" >> gmpublisher.desktop
         echo "Comment=A powerful and feature-packed Workshop publisher for Garry's Mod!" >> gmpublisher.desktop
 
+    - name: Prepare executables
+      run: |
+        cp src-tauri/target/release/gmpublisher .
+        cp src-tauri/target/release/libsteam_api.so .
+
     - name: Upload artifact
       uses: actions/upload-artifact@v3
       with:
         name: gmpublisher
         path: |
-          src-tauri/target/release/gmpublisher
-          src-tauri/target/release/libsteam_api.so
+          gmpublisher
+          libsteam_api.so
           gmpublisher.desktop
           README-Install.txt
