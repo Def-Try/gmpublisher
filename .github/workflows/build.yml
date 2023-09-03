@@ -23,12 +23,19 @@ jobs:
     
     #- name: Install Tauri CLI
     #  run: yarn add -D @tauri-apps/cli
-
-    - name: Download and extract steamworks v1.51 (151)
+    - name: Download steamworks v1.51 (151)
       run: |
-        # dry run
-        curl https://partner.steamgames.com/downloads/steamworks_sdk_151.zip > /dev/null
-        # install and download
+        wget https://partner.steamgames.com/downloads/steamworks_sdk_151.zip
+
+    - name: Upload steamworks archive
+      uses: actions/upload-artifact@v3
+      with:
+        name: steamworks
+        path: |
+          steamworks_sdk_151.zip
+  
+    - name: Extract steamworks v1.51 (151)
+      run: |
         wget https://partner.steamgames.com/downloads/steamworks_sdk_151.zip
         mkdir steamworks
         unzip steamworks_sdk_151.zip -d steamworks
