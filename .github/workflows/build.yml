@@ -24,9 +24,6 @@ jobs:
     - name: Install Tauri CLI
       run: yarn add -D @tauri-apps/cli
 
-    - name: Template command
-      run: echo "Hello, world!"
-
     #- name: Building and installing OpenSSL
     #  run: | 
     #    git clone git://git.openssl.org/openssl.git
@@ -36,14 +33,20 @@ jobs:
     #    make test
     #    sudo make install
 
-    - name: Setting environment variables
+    #- name: Setting environment variables
+    #  run: |
+    #    export OPENSSL_DIR="/usr/local/ssl"
+    #    export OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu" 
+    #    export OPENSSL_INCLUDE_DIR="/usr/include/openssl" 
+
+    - name: Download and extract steamworks v1.51 (151)
       run: |
-        export OPENSSL_DIR="/usr/local/ssl"
-        export OPENSSL_LIB_DIR="/usr/lib/x86_64-linux-gnu" 
-        export OPENSSL_INCLUDE_DIR="/usr/include/openssl" 
+        wget https://partner.steamgames.com/downloads/steamworks_sdk_151.zip
+        mkdir steamworks
+        unzip steamworks_sdk_151.zip -d steamworks
     
     - name: Build GMPublisher
-      run: yarn tauri build
+      run: STEAM_SDK_LOCATION=$(echo $(pwd)/steamworks) yarn tauri build
 
     - name: Bundle up
       run: cargo run --manifest-path src-tauri/Cargo.toml -- bundle
