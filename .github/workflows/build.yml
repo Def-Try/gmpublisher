@@ -24,8 +24,8 @@ jobs:
     - name: Download and extract steamworks v1.51 (151)
       run: |
         wget https://partner.steamgames.com/downloads/steamworks_sdk_151.zip
-        mkdir ./steamworks
-        unzip steamworks_sdk_151.zip -d ./steamworks
+        mkdir steamworks
+        unzip steamworks_sdk_151.zip -d steamworks
 
     #- name: Setup tmate session
     #  uses: mxschmitt/action-tmate@v3
