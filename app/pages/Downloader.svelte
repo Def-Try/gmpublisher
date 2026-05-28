@@ -8,7 +8,7 @@
 <script>
 	import { CloudDownload, Cross, Folder, FolderAdd, LinkChain } from 'akar-icons-svelte';
 	import { _ } from 'svelte-i18n';
-	import { invoke } from '@tauri-apps/api/tauri';
+	import { invoke } from "@tauri-apps/api/core"
 	import { listen } from '@tauri-apps/api/event';
 	import DestinationSelect from '../components/DestinationSelect.svelte';
 	import { Transaction } from '../transactions';
