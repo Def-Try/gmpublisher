@@ -34,6 +34,9 @@ jobs:
     - name: Install NPM dependencies
       run: npm install
 
+    - name: HACK - Attempt migrate Tauri
+      run: npm install @tauri-apps/cli@latest && npm run tauri migrate
+
     - name: Build
       run: npm run tauri build -- -v
 
@@ -56,90 +59,3 @@ jobs:
       with:
         files: src-tauri/target/release/gmpublisher_linux64.zip
         fail_on_unmatched_files: true
-
-  build_windows:
-    runs-on: windows-latest
-    steps:
-    - uses: actions/checkout@v2
-    - uses: actions/setup-node@v2
-
-    - name: Install NPM dependencies
-      run: npm install
-
-    - name: Build
-      run: npm run tauri build -- -v
-      env:
-        RUSTFLAGS: -Ctarget-feature=+crt-static
-
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: src-tauri/target/release/bundle/msi/gmpublisher_*.msi
-        fail_on_unmatched_files: true
-
-  build_macos:
-    runs-on: macos-latest
-    steps:
-    - uses: actions/checkout@v2
-
-    - name: Install Rust targets
-      run: |
-        mkdir -p /tmp/rust-toolchain-plz
-        cp src-tauri/rust-toolchain.toml /tmp/rust-toolchain-plz/
-        cd /tmp/rust-toolchain-plz
-        cargo init --lib
-        cargo check
-        rustup target add x86_64-apple-darwin
-
-    - uses: actions/setup-node@v2
-
-    - name: Install NPM dependencies
-      run: npm install
-
-    - name: Build
-      run: npm run tauri build -- --target universal-apple-darwin -v
-
-    - name: Copy Steamworks SDK to bundle
-      run: cp src-tauri/lib/steam_api/redistributable_bin/osx/libsteam_api.dylib src-tauri/target/universal-apple-darwin/release/bundle/macos/gmpublisher.app/Contents/MacOS/libsteam_api.dylib
-
-    - name: Prepare ZIP
-      run: |
-        cd src-tauri/target/universal-apple-darwin/release/bundle/macos
-        zip -r gmpublisher_macOS.app.zip gmpublisher.app
-
-    - name: Release
-      uses: softprops/action-gh-release@v1
-      with:
-        files: src-tauri/target/universal-apple-darwin/release/bundle/macos/gmpublisher_macOS.app.zip
-        fail_on_unmatched_files: true
-
-  aur_publish:
-    runs-on: ubuntu-latest
-    needs: build_linux
-    container: archlinux:base-devel
-    steps:
-      - uses: actions/checkout@v4
-      - name: Update PKGBUILD Version and Checksums
-        run: |
-          VERSION=${{ github.ref_name }}
-
-          echo "Updating PKGBUILD to version $VERSION"
-
-          sed -i "s/^pkgver=.*/pkgver=$VERSION/" PKGBUILD
-
-          useradd -m builder
-          chown -R builder:builder .
-
-          su builder -c "makepkg --printsrcinfo > .SRCINFO"
-          su builder -c "makepkg -g >> PKGBUILD"
-
-      - name: Publish AUR Package
-        uses: KSXGitHub/github-actions-deploy-aur@v4.1.1
-        with:
-          pkgname: gmpublisher-bin
-          pkgbuild: ./PKGBUILD
-          commit_username: ${{ secrets.AUR_USERNAME }}
-          commit_email: ${{ secrets.AUR_EMAIL }}
-          ssh_private_key: ${{ secrets.AUR_SSH_PRIVATE_KEY }}
-          commit_message: "Update to version ${{ github.ref_name }}"
-          updpkgsums: false
